@@ -3,6 +3,9 @@ package parquimetro.fiap.config;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import parquimetro.fiap.utils.ServiceUtils;
+
+import java.security.Provider;
 
 @Configuration
 
@@ -12,4 +15,7 @@ public class config {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
+
+    @Bean
+    public ServiceUtils serviceUtils(){return new ServiceUtils();}
 }

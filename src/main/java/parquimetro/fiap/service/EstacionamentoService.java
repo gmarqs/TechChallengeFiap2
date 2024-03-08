@@ -13,6 +13,7 @@ import parquimetro.fiap.model.dto.RegistroEstacionamentoDTO;
 import parquimetro.fiap.repository.CondutorRepository;
 import parquimetro.fiap.repository.EstacionamentoRepository;
 import parquimetro.fiap.repository.PagamentoRepository;
+import parquimetro.fiap.utils.ServiceUtils;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -22,8 +23,6 @@ import java.util.Optional;
 public class EstacionamentoService {
 
     @Autowired
-    private CondutorRepository condutorRepository;
-    @Autowired
     private EstacionamentoRepository estacionamentoRepository;
     @Autowired
     private ModelMapper modelMapper;
@@ -31,11 +30,14 @@ public class EstacionamentoService {
     @Autowired
     private PagamentoRepository pagamentoRepository;
 
+    @Autowired
+    private ServiceUtils serviceUtils;
+
     public void registrarEstacionamento(RegistroEstacionamentoDTO registroEstacionamentoDTO) {
-        Condutor condutor = condutorRepository.findById(registroEstacionamentoDTO.getCondutor()).orElseThrow(() -> new CondutorNotFoundException("Condutor não encontrado"));
+        Condutor condutor = serviceUtils.getCondutor(registroEstacionamentoDTO.getCondutor());
         verificaFormaDePagamento(condutor, registroEstacionamentoDTO.getPeriodo());
 
-        Optional<Veiculo> veiculoEncontrado = verificaVeiculos(registroEstacionamentoDTO.getVeiculo(), condutor);
+        Optional<Veiculo> veiculoEncontrado = serviceUtils.verificaVeiculos(registroEstacionamentoDTO.getVeiculo(), condutor);
 
         if (veiculoEncontrado.isPresent()) {
             RegistroEstacionamento registroEstacionamento = modelMapper.map(registroEstacionamentoDTO, RegistroEstacionamento.class);
@@ -61,9 +63,9 @@ public class EstacionamentoService {
         return condutor.getVeiculos().stream().filter(veiculo -> veiculo.getNome().equalsIgnoreCase(nomeveiculo)).findAny();
     }
 
-    @Transactional
+
     public ConsultaEstacionamentoDTO verificaTempoRestante(ConsultaEstacionamentoDTO consultaEstacionamentoDTO) {
-        Condutor condutor = condutorRepository.findById(consultaEstacionamentoDTO.getIdCondutor()).orElseThrow(() -> new CondutorNotFoundException("Condutor não encontrado"));
+        Condutor condutor = serviceUtils.getCondutor(consultaEstacionamentoDTO.getIdCondutor());
         Optional<Veiculo> veiculoEncontrado = verificaVeiculos(consultaEstacionamentoDTO.getVeiculo(), condutor);
 
         if (veiculoEncontrado.isPresent()) {
@@ -75,29 +77,19 @@ public class EstacionamentoService {
         return consultaEstacionamentoDTO;
     }
 
-    private static String verificaPeriodo(RegistroEstacionamento registro) {
+    private String verificaPeriodo(RegistroEstacionamento registro) {
         LocalDateTime horarioEntrada = registro.getHorarioEntrada();
-        LocalDateTime horarioAtual = LocalDateTime.now();
-        long horasRestantes;
-        long minutosRestantes;
-        if (Periodo.FIXO.equals(registro.getPeriodo())) {
-            int duracao = registro.getDuracao();
+        ControleTempoEstacionamento controleTempoEstacionado = serviceUtils.getTempoEstacionado(registro, horarioEntrada, LocalDateTime.now());
+        if (controleTempoEstacionado.getDuracao() > 0) {
 
-            LocalDateTime horarioFinal = horarioEntrada.plusHours(duracao);
-
-            if (horarioAtual.isAfter(horarioFinal)) {
+            if (controleTempoEstacionado.getHorarioAtual().isAfter(controleTempoEstacionado.getHorarioFinal())) {
                 return "O período já excedeu o tempo limite!!!!! Favor retirar o veículo.";
             } else {
-                horasRestantes = ChronoUnit.HOURS.between(horarioAtual, horarioFinal);
-                minutosRestantes = ChronoUnit.MINUTES.between(horarioAtual, horarioFinal) % 60;
-
-                return String.format("O período restante de estacionamento é de: %d horas e %d minutos", horasRestantes, minutosRestantes);
+                return String.format("O período restante de estacionamento é de: %d horas e %d minutos", controleTempoEstacionado.getHorario(), controleTempoEstacionado.getMinutos());
             }
         } else {
-            horasRestantes = ChronoUnit.HOURS.between(horarioEntrada, horarioAtual);
-            minutosRestantes = ChronoUnit.MINUTES.between(horarioEntrada, horarioAtual) % 60;
             return String.format("O veículo já está estacionado por %d horas e %d minutos. O sistema estenderá automaticamente o estacionamento" +
-                    "por mais 1 hora, a menos que o condutor efetue o pagamento", horasRestantes, minutosRestantes);
+                    "por mais 1 hora, a menos que o condutor efetue o pagamento", controleTempoEstacionado.getHorario(), controleTempoEstacionado.getMinutos());
         }
     }
 }

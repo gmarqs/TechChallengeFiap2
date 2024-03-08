@@ -27,4 +27,6 @@ public class RegistroEstacionamento {
     private Periodo periodo;
     private int duracao;
     private String status;
+    private boolean pago;
+    private Double valorPago;
 }

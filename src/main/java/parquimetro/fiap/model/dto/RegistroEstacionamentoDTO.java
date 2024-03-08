@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
+import parquimetro.fiap.Validator.DuracaoValida;
 import parquimetro.fiap.model.Periodo;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@DuracaoValida
 public class RegistroEstacionamentoDTO {
 
 
@@ -24,9 +26,7 @@ public class RegistroEstacionamentoDTO {
     private String veiculo;
     @Enumerated(EnumType.STRING)
     private Periodo periodo;
-    @NotNull(message = "A duração não pode ser nula")
-    @Range(min = 0, message = "A duração deve ser maior ou igual a zero")
-    private int duracao;
+    private Integer duracao;
     private String mensagem;
 
 }

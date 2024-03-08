@@ -61,14 +61,14 @@ public class CondutorExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<StandartError> idadeMin18(MethodArgumentNotValidException e, HttpServletRequest request){
+    public ResponseEntity<StandartError> camposIncompatibilidade(MethodArgumentNotValidException e, HttpServletRequest request){
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
         err.setTimestamp(Instant.now());
         err.setStatus(status.value());
         err.setError(e.getMessage());
 
-        err.setMessage("A idade do condutor deve ser maior que 18 anos");
+        err.setMessage("Existem campos com incompatibilidade");
 
         err.setPath(request.getRequestURI());
 
@@ -76,7 +76,7 @@ public class CondutorExceptionHandler {
     }
 
     @ExceptionHandler(PagamentoIncompativelException.class)
-    public ResponseEntity<StandartError> idadeMin18(PagamentoIncompativelException e, HttpServletRequest request){
+    public ResponseEntity<StandartError> formaDePagamentoIncompativel(PagamentoIncompativelException e, HttpServletRequest request){
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
         err.setTimestamp(Instant.now());
@@ -85,6 +85,21 @@ public class CondutorExceptionHandler {
 
         err.setMessage("O método selecionado pelo condutor foi PIX. Esse método de pagamento só está disponível para períodos por tempo fixo. Caso ainda queira iniciar o período por hora, " +
                 "favor alterar o método de pagamento para DEBITO ou CREDITO");
+
+        err.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(status).body(this.err);
+    }
+
+    @ExceptionHandler(PagamentoInvalidoException.class)
+    public ResponseEntity<StandartError> PagamentoInvalido(PagamentoInvalidoException e, HttpServletRequest request){
+
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError(e.getMessage());
+
+        err.setMessage("A tentativa de pagamento está invalida. Motivo: pagamento via PIX insuficiente.");
 
         err.setPath(request.getRequestURI());
 
