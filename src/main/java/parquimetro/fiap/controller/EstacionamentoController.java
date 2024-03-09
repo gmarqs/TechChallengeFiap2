@@ -3,6 +3,8 @@ package parquimetro.fiap.controller;
 import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import parquimetro.fiap.model.RegistroEstacionamento;
@@ -18,15 +20,16 @@ public class EstacionamentoController {
     private EstacionamentoService estacionamentoService;
 
     @PostMapping
-    public void registrarEstacionamento(@Valid @RequestBody RegistroEstacionamentoDTO consultaEstacionamentoDTO){
+    public ResponseEntity<Void> registrarEstacionamento(@Valid @RequestBody RegistroEstacionamentoDTO consultaEstacionamentoDTO){
         estacionamentoService.registrarEstacionamento(consultaEstacionamentoDTO);
 
-        //TODO CRIAR AS EXCEPTIONS NECESSÁRIAS PARA ERROS
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+
     }
 
-    @GetMapping
-    public ResponseEntity<ConsultaEstacionamentoDTO> verificaTempoRestante(@Valid @RequestBody ConsultaEstacionamentoDTO consultaEstacionamentoDTO){
-        estacionamentoService.verificaTempoRestante(consultaEstacionamentoDTO);
+    @GetMapping("/consultar")
+    public ResponseEntity<ConsultaEstacionamentoDTO> consultarTempoRestante(@Valid @RequestBody ConsultaEstacionamentoDTO consultaEstacionamentoDTO){
+        estacionamentoService.consultarTempoRestante(consultaEstacionamentoDTO);
         return ResponseEntity.ok(consultaEstacionamentoDTO);
     }
 

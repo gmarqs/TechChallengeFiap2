@@ -24,9 +24,6 @@ public class ServiceUtils {
 
     }
 
-    public boolean veiculoExiste(Optional<Veiculo> veiculo) {
-        return veiculo.isPresent();
-    }
 
     public ControleTempoEstacionamento getTempoEstacionado(RegistroEstacionamento registroEstacionamento, LocalDateTime horarioEntrada, LocalDateTime horarioFinal) {
         ControleTempoEstacionamento controleTempoEstacionamento = new ControleTempoEstacionamento();

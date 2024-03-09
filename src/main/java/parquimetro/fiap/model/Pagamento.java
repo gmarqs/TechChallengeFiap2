@@ -20,6 +20,5 @@ public class Pagamento {
     @Enumerated(EnumType.STRING)
     @NotBlank
     private FormaDePagamento formaDePagamento;
-   // @OneToOne
-    //private Condutor idCondutor;
+
 }

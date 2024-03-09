@@ -45,21 +45,6 @@ public class CondutorExceptionHandler {
         return ResponseEntity.status(status).body(this.err);
     }
 
-    @ExceptionHandler(VeiculoNotFoundException.class)
-    public ResponseEntity<StandartError> enumNotFound(VeiculoNotFoundException e, HttpServletRequest request){
-
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        err.setTimestamp(Instant.now());
-        err.setStatus(status.value());
-        err.setError("Veiculo not found");
-
-        err.setMessage("Veículo informado não foi encontrado na base de dados do condutor. Verifique novamente!");
-
-        err.setPath(request.getRequestURI());
-
-        return ResponseEntity.status(status).body(this.err);
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<StandartError> camposIncompatibilidade(MethodArgumentNotValidException e, HttpServletRequest request){
 

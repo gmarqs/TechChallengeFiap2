@@ -7,14 +7,9 @@ import org.springframework.stereotype.Service;
 import parquimetro.fiap.model.Condutor;
 import parquimetro.fiap.model.Veiculo;
 import parquimetro.fiap.model.dto.CondutorDTO;
-import parquimetro.fiap.repository.EnderecoRepository;
 import parquimetro.fiap.repository.CondutorRepository;
-import parquimetro.fiap.repository.VeiculoRepository;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CondutorService {

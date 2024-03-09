@@ -49,8 +49,13 @@ public class PagamentoService {
         Condutor condutor = serviceUtils.getCondutor(pagamentoEstacionamentoDTO.getIdCondutor());
         Optional<Veiculo> veiculo = serviceUtils.verificaVeiculos(pagamentoEstacionamentoDTO.getVeiculo(), condutor);
 
-        if (serviceUtils.veiculoExiste(veiculo)) {
-            RegistroEstacionamento registroEstacionamento = estacionamentoRepository.findVeiculoStatusE("E", condutor, veiculo.get().getNome());
+        if (veiculo.isPresent()) {
+            Optional<RegistroEstacionamento> registro = estacionamentoRepository.findVeiculoStatusE("E", condutor, veiculo.get().getNome());
+            if (registro.isEmpty()){
+                throw new VeiculoNotFoundException("Veiculo não está estacionado");
+            }
+
+            RegistroEstacionamento registroEstacionamento = registro.get();
             registroEstacionamento.setStatus("P");
 
             tempoEstacionado = serviceUtils.getTempoEstacionado(registroEstacionamento, registroEstacionamento.getHorarioEntrada(), LocalDateTime.now());

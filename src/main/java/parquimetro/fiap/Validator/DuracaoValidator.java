@@ -20,7 +20,7 @@ public class DuracaoValidator implements ConstraintValidator<DuracaoValida, Regi
         if (Periodo.FIXO.equals(dto.getPeriodo())) {
             return dto.getDuracao() != null && dto.getDuracao() > 0;
         } else if (Periodo.HORA.equals(dto.getPeriodo())) {
-            return dto.getDuracao() == null;
+            return dto.getDuracao() == null || dto.getDuracao() == 0;
         }
 
         return true;

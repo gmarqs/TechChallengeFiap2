@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import parquimetro.fiap.exception.CondutorNotFoundException;
 import parquimetro.fiap.exception.PagamentoIncompativelException;
+import parquimetro.fiap.exception.VeiculoJaEstacionadoException;
 import parquimetro.fiap.exception.VeiculoNotFoundException;
 import parquimetro.fiap.model.*;
 import parquimetro.fiap.model.dto.ConsultaEstacionamentoDTO;
@@ -37,6 +38,14 @@ public class EstacionamentoService {
         Condutor condutor = serviceUtils.getCondutor(registroEstacionamentoDTO.getCondutor());
         verificaFormaDePagamento(condutor, registroEstacionamentoDTO.getPeriodo());
 
+        Optional<RegistroEstacionamento> veiculoEstacionado = estacionamentoRepository.findVeiculoStatusE("E", condutor, registroEstacionamentoDTO.getVeiculo());
+
+        if(veiculoEstacionado.isPresent()){
+            throw new VeiculoJaEstacionadoException("O veiculo já está estacionado");
+        }
+
+
+
         Optional<Veiculo> veiculoEncontrado = serviceUtils.verificaVeiculos(registroEstacionamentoDTO.getVeiculo(), condutor);
 
         if (veiculoEncontrado.isPresent()) {
@@ -64,13 +73,19 @@ public class EstacionamentoService {
     }
 
 
-    public ConsultaEstacionamentoDTO verificaTempoRestante(ConsultaEstacionamentoDTO consultaEstacionamentoDTO) {
+    public ConsultaEstacionamentoDTO consultarTempoRestante(ConsultaEstacionamentoDTO consultaEstacionamentoDTO) {
         Condutor condutor = serviceUtils.getCondutor(consultaEstacionamentoDTO.getIdCondutor());
         Optional<Veiculo> veiculoEncontrado = verificaVeiculos(consultaEstacionamentoDTO.getVeiculo(), condutor);
 
         if (veiculoEncontrado.isPresent()) {
-            RegistroEstacionamento registro = estacionamentoRepository.findVeiculoStatusE("E", condutor, veiculoEncontrado.get().getNome());
-            consultaEstacionamentoDTO.setMensagem(verificaPeriodo(registro));
+            Optional<RegistroEstacionamento> registro = estacionamentoRepository.findVeiculoStatusE("E", condutor, veiculoEncontrado.get().getNome());
+
+            if(registro.isEmpty()){
+                throw new VeiculoNotFoundException("Veiculo não está estacionado");
+            }
+
+            consultaEstacionamentoDTO.setMensagem(verificaPeriodo(registro.get()));
+
         }else {
             throw new VeiculoNotFoundException("Veiculo não encontrado");
         }
