@@ -1,13 +1,10 @@
 package parquimetro.fiap.controller;
 
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import parquimetro.fiap.model.RegistroEstacionamento;
 import parquimetro.fiap.model.dto.ConsultaEstacionamentoDTO;
 import parquimetro.fiap.model.dto.RegistroEstacionamentoDTO;
 import parquimetro.fiap.service.EstacionamentoService;

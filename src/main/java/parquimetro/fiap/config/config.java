@@ -5,8 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import parquimetro.fiap.utils.ServiceUtils;
 
-import java.security.Provider;
-
 @Configuration
 
 public class config {

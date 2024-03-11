@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TechChallengeFase2PaquimetroApplicationTests {
+class TechChallengeFase2ParquimetroApplicationTests {
 
 	@Test
 	void contextLoads() {

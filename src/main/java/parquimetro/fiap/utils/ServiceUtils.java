@@ -7,7 +7,6 @@ import parquimetro.fiap.repository.CondutorRepository;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 public class ServiceUtils {

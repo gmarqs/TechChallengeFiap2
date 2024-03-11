@@ -24,7 +24,7 @@ public class CondutorDTO{
         @Pattern(regexp = "\\(\\d{2}\\)\\d{5}-\\d{4}|\\d{11}|\\(\\d{2}\\)\\s\\d{5}-\\d{4}")
         @NotBlank(message = "Telefone inválido")
         private String telefone;
-        @Email
+        @Email(message = "O formato do e-mail está incorreto")
         private String email;
         @Enumerated(EnumType.STRING)
         private Genero genero;

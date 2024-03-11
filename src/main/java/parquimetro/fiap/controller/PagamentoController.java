@@ -3,7 +3,10 @@ package parquimetro.fiap.controller;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import parquimetro.fiap.model.FormaDePagamento;
 import parquimetro.fiap.model.dto.CondutorPagamentoDTO;
 import parquimetro.fiap.model.dto.PagamentoEstacionamentoDTO;
@@ -17,7 +20,7 @@ public class PagamentoController {
     @Autowired
     private PagamentoService pagamentoService;
 
-    @PatchMapping
+    @PatchMapping("/cadastraFormaDePagamento")
     public ResponseEntity<String> cadastraFormaDePagamento(@Valid @RequestBody CondutorPagamentoDTO condutorPagamentoDTO){
         pagamentoService.cadastraFormaDePagamento(condutorPagamentoDTO);
         if(FormaDePagamento.PIX.equals(condutorPagamentoDTO.getFormaDePagamento()))

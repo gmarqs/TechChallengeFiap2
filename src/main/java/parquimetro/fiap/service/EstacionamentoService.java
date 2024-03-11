@@ -1,23 +1,19 @@
 package parquimetro.fiap.service;
 
-import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import parquimetro.fiap.exception.CondutorNotFoundException;
 import parquimetro.fiap.exception.PagamentoIncompativelException;
 import parquimetro.fiap.exception.VeiculoJaEstacionadoException;
 import parquimetro.fiap.exception.VeiculoNotFoundException;
 import parquimetro.fiap.model.*;
 import parquimetro.fiap.model.dto.ConsultaEstacionamentoDTO;
 import parquimetro.fiap.model.dto.RegistroEstacionamentoDTO;
-import parquimetro.fiap.repository.CondutorRepository;
 import parquimetro.fiap.repository.EstacionamentoRepository;
 import parquimetro.fiap.repository.PagamentoRepository;
 import parquimetro.fiap.utils.ServiceUtils;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @Service
@@ -104,7 +100,7 @@ public class EstacionamentoService {
             }
         } else {
             return String.format("O veículo já está estacionado por %d horas e %d minutos. O sistema estenderá automaticamente o estacionamento" +
-                    "por mais 1 hora, a menos que o condutor efetue o pagamento", controleTempoEstacionado.getHorario(), controleTempoEstacionado.getMinutos());
+                    " por mais 1 hora, a menos que o condutor efetue o pagamento", controleTempoEstacionado.getHorario(), controleTempoEstacionado.getMinutos());
         }
     }
 }
